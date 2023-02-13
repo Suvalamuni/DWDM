@@ -1,0 +1,27 @@
+# Load the required library
+library(ggplot2)
+library(dplyr)
+
+# Load the diabetes dataset
+data("diabetes", package = "ElemStatLearn")
+
+# Filter the dataset to keep only the columns of interest (age and blood pressure)
+diabetes_filtered <- diabetes %>%
+  select(age, bp)
+
+# Create a scatterplot to show the relationship between age and blood pressure
+ggplot(data = diabetes_filtered, aes(x = age, y = bp)) +
+  geom_point(color = "blue") +
+  xlab("Age") +
+  ylab("Blood Pressure") +
+  ggtitle("Relationship between Age and Blood Pressure")
+age_group <- cut(diabetes_filtered$age, breaks = seq(30, 80, by = 10))
+diabetes_grouped <- diabetes_filtered %>%
+  group_by(age_group) %>%
+  summarize(mean_bp = mean(bp))
+
+ggplot(data = diabetes_grouped, aes(x = age_group, y = mean_bp)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  xlab("Age Group") +
+  ylab("Mean Blood Pressure") +
+  ggtitle("Mean Blood Pressure by Age Group")
